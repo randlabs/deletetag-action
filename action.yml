@@ -1,0 +1,27 @@
+name: 'DeleteTagAndRelease'
+description: 'GitHub action to delete tags and/or releases'
+author: 'RandLabs Inc.'
+
+branding:
+  color: "red"
+  icon: "delete"
+
+inputs:
+  tag:
+    description: 'Tag name'
+    required: true
+  delete_release:
+    description: 'Whether to delete release or not'
+    required: false
+    default: true
+  delete_tag:
+    description: 'Whether to delete tag or not (implies delete_release if true)'
+    required: false
+    default: true
+  repo:
+    description: 'Target repository in <owner-or-company>/<repository> format'
+    required: false
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
