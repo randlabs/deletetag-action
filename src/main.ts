@@ -6,9 +6,9 @@ import * as github from '@actions/github';
 async function run(): Promise<void> {
 	try {
 		// Ensure the github token is passed through environment variables
-		const token = core.getInput('github-token') || process.env.GITHUB_TOKEN;
+		const token = process.env.GITHUB_TOKEN;
 		if (!token) {
-			throw new Error('no `github-token` input nor GITHUB_TOKEN environment variable not found. pass `GITHUB_TOKEN` as env');
+			throw new Error('GITHUB_TOKEN environment variable not found. pass `GITHUB_TOKEN` as env');
 		}
 
 		// Get tag to delete

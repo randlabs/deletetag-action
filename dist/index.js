@@ -46,9 +46,9 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Ensure the github token is passed through environment variables
-            const token = core.getInput('github-token') || process.env.GITHUB_TOKEN;
+            const token = process.env.GITHUB_TOKEN;
             if (!token) {
-                throw new Error('no `github-token` input nor GITHUB_TOKEN environment variable not found. pass `GITHUB_TOKEN` as env');
+                throw new Error('GITHUB_TOKEN environment variable not found. pass `GITHUB_TOKEN` as env');
             }
             // Get tag to delete
             const tagName = core.getInput('tag', { required: true });

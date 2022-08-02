@@ -39,6 +39,10 @@ inputs:
     required: false
 ```
 
+### Environment variables:
+
+`GITHUB_TOKEN` must be set to the workflow's token or the personal access token (PAT) required to accomplish the task.
+
 [typescript-url]: http://www.typescriptlang.org/
 [github-actions-url]: https://github.com/features/actions
 [license-url]: https://github.com/randlabs/deletetag-action/blob/master/LICENSE
