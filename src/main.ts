@@ -49,12 +49,13 @@ async function run(): Promise<void> {
 		// Create the GitHub accessor
 		const octokit = github.getOctokit(token);
 
-		// Delete releases of the given tag
+		// Execute delete release action
 		if (deleteRelease) {
+			core.info('Deleting release with tag: ' + tagName);
+
 			let releaseId = 0;
 
 			// Get the release ID of the given tag
-			core.info('Deleting release with tag: ' + tagName);
 			try {
 				const { data } = await octokit.rest.repos.getReleaseByTag({
 					owner,
@@ -64,6 +65,7 @@ async function run(): Promise<void> {
 				releaseId = data.id;
 			}
 			catch (err: any) {
+				// Handle release not found error
 				if (err.status !== 404 && err.message !== 'Not Found') {
 					throw err;
 				}
@@ -79,6 +81,7 @@ async function run(): Promise<void> {
 					});
 				}
 				catch (err: any) {
+					// Handle release not found error
 					if (err.status !== 404 && err.message !== 'Not Found') {
 						throw err;
 					}
@@ -86,9 +89,11 @@ async function run(): Promise<void> {
 			}
 		}
 
-		// Delete tag
+		// Execute delete tag action
 		if (deleteTag) {
 			core.info('Deleting tag: ' + tagName);
+
+			// Delete tag reference
 			try {
 				await octokit.rest.git.deleteRef({
 					owner,
@@ -97,7 +102,8 @@ async function run(): Promise<void> {
 				});
 			}
 			catch (err: any) {
-				if (err.status !== 422 && err.message !== 'Reference does not exist') {
+				// Handle tag reference not found error
+				if (err.status !== 404 && err.message !== 'Not Found' && err.status !== 422 && err.message !== 'Reference does not exist') {
 					throw err;
 				}
 			}
@@ -117,7 +123,7 @@ async function run(): Promise<void> {
 }
 
 function isYes(input: string): boolean {
-	return (input === 'true') || (input === 'yes') || (input === '1') || (input === '1')
+	return (input === 'true') || (input === 'yes') || (input === 'y') || (input === '1')
 }
 
 // -----------------------------------------------------------------------------
