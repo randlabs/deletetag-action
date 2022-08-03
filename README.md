@@ -48,4 +48,4 @@ inputs:
 [license-url]: https://github.com/randlabs/deletetag-action/blob/master/LICENSE
 [license-image]: https://img.shields.io/github/license/randlabs/deletetag-action.svg
 [issues-url]: https://github.com/randlabs/deletetag-action/issues
-[issues-image]: https://img.shields.io/github/issues-raw/gregoranders/nodejs-create-release.svg
+[issues-image]: https://img.shields.io/github/issues-raw/randlabs/deletetag-action.svg
