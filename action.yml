@@ -8,18 +8,18 @@ branding:
 
 inputs:
   tag:
-    description: 'Tag name'
+    description: 'Tag name.'
     required: true
   delete_release:
-    description: 'Whether to delete release or not'
+    description: 'Set to true to indicate if the release must be deleted.'
     required: false
     default: true
   delete_tag:
-    description: 'Whether to delete tag or not (implies delete_release if true)'
+    description: 'Set to true to indicate if the tag must be deleted (implies release deletion too).'
     required: false
     default: true
   repo:
-    description: 'Target repository in <owner-or-company>/<repository> format'
+    description: 'Target repository in <owner-or-company>/<repository> format. Defaults to the one that fired the action.'
     required: false
 
 runs:
