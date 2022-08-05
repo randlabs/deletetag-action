@@ -39,6 +39,15 @@ inputs:
     required: false
 ```
 
+### Permissions
+
+This Action requires the following permissions on the GitHub integration token:
+
+```YML
+permissions:
+  contents: write
+```
+
 ### Environment variables:
 
 `GITHUB_TOKEN` must be set to the workflow's token or the personal access token (PAT) required to accomplish the task.
