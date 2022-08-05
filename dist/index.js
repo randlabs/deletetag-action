@@ -50,22 +50,8 @@ function run() {
             if (!token) {
                 throw new Error('GITHUB_TOKEN environment variable not found. pass `GITHUB_TOKEN` as env');
             }
-            // Get tag to delete
-            const tagName = core.getInput('tag', { required: true });
-            if (!tagName) {
-                throw new Error('no `tag` input');
-            }
-            // Get deletion flags
-            let input = core.getInput('delete_tag');
-            let deleteTag = (!input) || isYes(input);
-            input = core.getInput('delete_release');
-            let deleteRelease = (!input) || isYes(input);
-            if (deleteTag) {
-                deleteRelease = true;
-            }
-            if (!(deleteRelease || deleteTag)) {
-                throw new Error('no action to execute');
-            }
+            // Create the GitHub accessor
+            const octokit = github.getOctokit(token);
             // Get target owner and repository
             let { repo, owner } = github.context.repo;
             const ownerRepo = core.getInput('repo');
@@ -80,20 +66,37 @@ function run() {
                     throw new Error('the specified `repo` is invalid');
                 }
             }
-            // Create the GitHub accessor
-            const octokit = github.getOctokit(token);
+            // Get tag to delete
+            const tagName = core.getInput('tag');
+            if (!tagName) {
+                throw new Error('no `tag` input');
+            }
+            // Get deletion flags
+            let input = core.getInput('delete_tag');
+            let deleteTag = (!input) || isYes(input);
+            input = core.getInput('delete_release');
+            let deleteRelease = (!input) || isYes(input);
+            if (deleteTag) {
+                deleteRelease = true;
+            }
+            if (!(deleteRelease || deleteTag)) {
+                throw new Error('no action to execute');
+            }
             // Execute delete release action
             if (deleteRelease) {
                 core.info('Deleting release with tag: ' + tagName);
                 let releaseId = 0;
                 // Get the release ID of the given tag
                 try {
-                    const { data } = yield octokit.rest.repos.getReleaseByTag({
+                    const releaseInfo = yield octokit.rest.repos.getReleaseByTag({
                         owner,
                         repo,
                         tag: tagName
                     });
-                    releaseId = data.id;
+                    if (releaseInfo.status !== 200) {
+                        throw new Error('Failed to retrieve release from tag');
+                    }
+                    releaseId = releaseInfo.data.id;
                 }
                 catch (err) {
                     // Handle release not found error
