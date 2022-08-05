@@ -11,8 +11,26 @@ async function run(): Promise<void> {
 			throw new Error('GITHUB_TOKEN environment variable not found. pass `GITHUB_TOKEN` as env');
 		}
 
+		// Create the GitHub accessor
+		const octokit = github.getOctokit(token);
+
+		// Get target owner and repository
+		let { repo, owner } = github.context.repo;
+		const ownerRepo = core.getInput('repo');
+		if (ownerRepo) {
+			const ownerRepoItems = ownerRepo.split('/');
+			if (ownerRepoItems.length != 2) {
+				throw new Error('the specified `repo` is invalid');
+			}
+			owner = ownerRepoItems[0].trim();
+			repo = ownerRepoItems[1].trim();
+			if (owner.length == 0 || repo.length == 0) {
+				throw new Error('the specified `repo` is invalid');
+			}
+		}
+
 		// Get tag to delete
-		const tagName = core.getInput('tag', { required: true });
+		const tagName = core.getInput('tag');
 		if (!tagName) {
 			throw new Error('no `tag` input');
 		}
@@ -31,24 +49,6 @@ async function run(): Promise<void> {
 			throw new Error('no action to execute');
 		}
 
-		// Get target owner and repository
-		let { repo, owner } = github.context.repo;
-		const ownerRepo = core.getInput('repo');
-		if (ownerRepo) {
-			const ownerRepoItems = ownerRepo.split('/');
-			if (ownerRepoItems.length != 2) {
-				throw new Error('the specified `repo` is invalid');
-			}
-			owner = ownerRepoItems[0].trim();
-			repo = ownerRepoItems[1].trim();
-			if (owner.length == 0 || repo.length == 0) {
-				throw new Error('the specified `repo` is invalid');
-			}
-		}
-
-		// Create the GitHub accessor
-		const octokit = github.getOctokit(token);
-
 		// Execute delete release action
 		if (deleteRelease) {
 			core.info('Deleting release with tag: ' + tagName);
@@ -57,12 +57,16 @@ async function run(): Promise<void> {
 
 			// Get the release ID of the given tag
 			try {
-				const { data } = await octokit.rest.repos.getReleaseByTag({
+				const releaseInfo = await octokit.rest.repos.getReleaseByTag({
 					owner,
 					repo,
 					tag: tagName
 				});
-				releaseId = data.id;
+				if (releaseInfo.status !== 200) {
+					throw new Error('Failed to retrieve release from tag');
+				}
+
+				releaseId = releaseInfo.data.id;
 			}
 			catch (err: any) {
 				// Handle release not found error
