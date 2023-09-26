@@ -127,6 +127,7 @@ async function run(): Promise<void> {
 }
 
 function isYes(input: string): boolean {
+	input = input.toLowerCase();
 	return (input === 'true') || (input === 'yes') || (input === 'y') || (input === '1')
 }
 
