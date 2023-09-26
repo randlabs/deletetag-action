@@ -13,15 +13,15 @@ inputs:
   delete_release:
     description: 'Set to true to indicate if the release must be deleted.'
     required: false
-    default: true
+    default: 'true'
   delete_tag:
     description: 'Set to true to indicate if the tag must be deleted (implies release deletion too).'
     required: false
-    default: true
+    default: 'true'
   repo:
     description: 'Target repository in <owner-or-company>/<repository> format. Defaults to the one that fired the action.'
     required: false
 
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
