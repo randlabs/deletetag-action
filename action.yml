@@ -10,11 +10,11 @@ inputs:
   tag:
     description: 'Tag name.'
     required: true
-  delete_release:
+  delete-release:
     description: 'Set to true to indicate if the release must be deleted.'
     required: false
     default: 'true'
-  delete_tag:
+  delete-tag:
     description: 'Set to true to indicate if the tag must be deleted (implies release deletion too).'
     required: false
     default: 'true'

@@ -26,12 +26,12 @@ inputs:
   tag:
     description: 'Tag name'
     required: true
-  delete_release:
+  delete-release:
     description: 'Whether to delete release or not'
     required: false
     default: true
-  delete_tag:
-    description: 'Whether to delete tag or not (implies delete_release if true)'
+  delete-tag:
+    description: 'Whether to delete tag or not (implies delete-release if true)'
     required: false
     default: true
   repo:
